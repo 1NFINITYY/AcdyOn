@@ -34,22 +34,34 @@ router.post("/recommend", async (req, res) => {
       });
     }
 
-    // Generate recommendation using Gemini
+    // Generate recommendation
     const recommendationData =
-  await generateRecommendation({
-    qualification,
-    experience,
-    profession,
-    careerGoal,
-  });
+      await generateRecommendation({
+        qualification,
+        experience,
+        profession,
+        careerGoal,
+      });
 
-  const recommendation =
-    recommendationData.recommendation;
+    const recommendation =
+      recommendationData.recommendation;
 
-  const reason =
-    recommendationData.reason;
+    const reason =
+      recommendationData.reason;
 
-    // Save to Supabase
+    // 🚫 DO NOT SAVE INVALID INPUTS
+    if (
+      recommendation ===
+      "Invalid Input"
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: reason,
+        recommendation,
+      });
+    }
+
+    // Save valid submissions only
     const { data, error } = await supabase
       .from("submissions")
       .insert([
@@ -66,7 +78,10 @@ router.post("/recommend", async (req, res) => {
       .select();
 
     if (error) {
-      console.error("Supabase Error:", error);
+      console.error(
+        "Supabase Error:",
+        error
+      );
 
       return res.status(500).json({
         success: false,
@@ -82,7 +97,10 @@ router.post("/recommend", async (req, res) => {
       submission: data[0],
     });
   } catch (error) {
-    console.error("Recommendation Error:", error);
+    console.error(
+      "Recommendation Error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
