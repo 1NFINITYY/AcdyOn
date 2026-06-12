@@ -4,6 +4,8 @@ An AI-powered web application that helps users identify the most suitable academ
 
 The system leverages Google's Gemini AI model to generate personalized academic recommendations and stores valid submissions in Supabase for future reference.
 
+as backend is deployed on render , it takes about 2 min to start the backend because of free service , so please dont judge the speed of backend based on that
+
 ---
 
 ## 🚀 Features
